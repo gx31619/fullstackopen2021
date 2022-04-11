@@ -6,9 +6,9 @@ const SearchCountries = (props) => {
     }
 
     return (
-        <div>
+        <form>
             find countries<input value={props.searchCountries} onChange={handleSearchCountries} />
-        </div>
+        </form>
     )
 }
 
