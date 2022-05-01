@@ -1,10 +1,11 @@
 import Person from './Person';
 
-const Persons = (props) => {
-    const displayFilteredPeople = props.persons.filter(person => person.name.toLowerCase().includes(props.searchFilter.toLowerCase()));
+const Persons = ({ persons, searchFilter, handleDelete }) => {
+    const displayFilteredPeople = persons.filter(person => person.name.toLowerCase().includes(searchFilter.toLowerCase()));
+
     return (
         <div>
-            {displayFilteredPeople.map((person) => <Person key={person.id} name={person.name} number={person.number} />)}
+            {displayFilteredPeople.map((person) => <Person key={person.id} person={person} handleDelete={handleDelete} />)}
         </div>)
 }
 

@@ -1,26 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import PersonForm from './components/PersonForm';
 import Filter from './components/Filter';
 import Persons from './components/Persons';
-import axios from 'axios';
+import personService from './services/personService';
 
 const App = () => {
 
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
 
+  console.log('render', persons.length, 'persons')
+
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -35,11 +34,26 @@ const App = () => {
     } else {
       setPersons(persons.concat(personObject));
     }
+
+    personService
+      .create(personObject)
+      .then(response => {
+        setPersons(persons.concat(response))
+      })
+
     setNewName('')
     setNewNumber('')
 
   }
-
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id))
+        })
+    }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -53,7 +67,7 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <div>
-        <Persons persons={persons} searchFilter={searchFilter} />
+        <Persons persons={persons} searchFilter={searchFilter} handleDelete={handleDelete} />
       </div>
     </div>
   )

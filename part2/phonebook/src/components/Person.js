@@ -1,6 +1,7 @@
-const Person = (props) => {
+
+const Person = ({ person, handleDelete }) => {
     return (
-        <div>{props.name} {props.number}</div>
+        <li>{person.name} {person.number} <button onClick={() => handleDelete(person.id, person.name)}>Delete</button> </li>
     );
 }
 export default Person;
